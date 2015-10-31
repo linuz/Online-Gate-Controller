@@ -1,4 +1,4 @@
-import string, random, sys
+import string, random, sys, os.path
 
 authFile='visitors.txt'
 protocol='http://'
@@ -10,7 +10,12 @@ def constructAuth():
     auth=''.join(random.choice(potentialData) for _ in xrange(16))
     return auth
 
+def checkAuthFile():
+    if not os.path.exists(authFile):
+        file(authFile, 'w').close()
+
 def addUser(name):
+    checkAuthFile()
     with open(authFile, 'a') as f:
         auth=constructAuth()
         f.write(name + ':' + auth + '\n')
@@ -18,6 +23,7 @@ def addUser(name):
         return auth
 
 def readFileContents():
+    checkAuthFile()
     with open(authFile, 'r') as f:
         fileContents=f.readlines()
         return fileContents
@@ -32,6 +38,7 @@ def searchForUser(name, userList):
     return user
 
 def removeFromFile(authCode):
+    checkAuthFile()
     with open(authFile, 'r+') as f:
         contents = f.readlines()
         f.seek(0)
