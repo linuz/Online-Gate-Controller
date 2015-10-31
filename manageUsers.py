@@ -44,7 +44,7 @@ if __name__ == '__main__':
     if(len(sys.argv) == 1):
         print('Add User:    python manageUsers.py add <name>')
         print('Delete User: python manageUsers.py del <name>')
-        print('Show User:   python manageUsers.py shw <name>')
+        print('Show User:   python manageUsers.py show <name>')
 
     else:
         if(sys.argv[1] == 'add'):
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                 name=name[1:]
             authSearched=searchForUser(name, readFileContents())
             if(authSearched != 'noAuthCodeFound'):
-                print('User already exists, try this argument: manageUsers.py shw ' + name)
+                print('User already exists, try this argument: manageUsers.py show ' + name)
             else:
                 auth=addUser(name)
                 print(name + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + auth)
@@ -80,7 +80,7 @@ if __name__ == '__main__':
                 print('No Match found. Please  try another name.')
 
 
-        elif(sys.argv[1] == 'shw'):
+        elif(sys.argv[1] == 'show'):
             if(len(sys.argv) == 2):
                 name=raw_input('Show which user? ')
             else:
