@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import string, random, sys, os.path
 
 authFile='visitors.txt'
