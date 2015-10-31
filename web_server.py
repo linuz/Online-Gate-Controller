@@ -76,6 +76,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     # Respond to GET requests
     def do_GET(s):
         s.send_response(200)
+        s.send_header("Content-Type", "text/html")
         s.end_headers() 
         s.wfile.write("<center><h1>Welcome!</h1></center>")
         get_parameter_value(s.path)
