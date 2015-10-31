@@ -1,4 +1,4 @@
-import string, random, sys
+import string, random, sys, os.path
 
 authFile='visitors.txt'
 protocol='http://'
@@ -10,7 +10,12 @@ def constructAuth():
     auth=''.join(random.choice(potentialData) for _ in xrange(16))
     return auth
 
+def checkAuthFile():
+    if not os.path.exists(authFile):
+        file(authFile, 'w').close()
+
 def addUser(name):
+    checkAuthFile()
     with open(authFile, 'a') as f:
         auth=constructAuth()
         f.write(name + ':' + auth + '\n')
@@ -18,20 +23,22 @@ def addUser(name):
         return auth
 
 def readFileContents():
+    checkAuthFile()
     with open(authFile, 'r') as f:
         fileContents=f.readlines()
         return fileContents
 
 def searchForUser(name, userList):
-    match = 'noAuthCodeFound'
-    for item in userList:
-        if name.lower() in item.lower():
-            match = item.split(':')[1]
-            match = match[:-1]
+    user = ['NoUser','noAuthCodeFound']
+    for storedUser in userList:
+        if name.lower() in storedUser.lower():
+            user = storedUser.split(':')
+            user[1] = user[1][:-1]
             break
-    return match
+    return user
 
 def removeFromFile(authCode):
+    checkAuthFile()
     with open(authFile, 'r+') as f:
         contents = f.readlines()
         f.seek(0)
@@ -56,8 +63,8 @@ if __name__ == '__main__':
                 for arg in sys.argv[2:]:
                     name=name + ' ' + arg
                 name=name[1:]
-            authSearched=searchForUser(name, readFileContents())
-            if(authSearched != 'noAuthCodeFound'):
+            userFromList=searchForUser(name, readFileContents())
+            if(userFromList[1] != 'noAuthCodeFound'):
                 print('User already exists, try this argument: manageUsers.py show ' + name)
             else:
                 auth=addUser(name)
@@ -72,10 +79,10 @@ if __name__ == '__main__':
                 for arg in sys.argv[2:]:
                     name=name + ' ' + arg
                 name=name[1:]
-            authSearched=searchForUser(name, readFileContents())
-            if(authSearched != 'noAuthCodeFound'):
-                removeFromFile(authSearched)
-                print('Removed ' + name + ' from the authorization file')
+            userFromList=searchForUser(name, readFileContents())
+            if(userFromList[1] != 'noAuthCodeFound'):
+                removeFromFile(userFromList[1])
+                print('Removed ' + userFromList[0] + ' from the authorization file')
             else:
                 print('No Match found. Please  try another name.')
 
@@ -89,8 +96,8 @@ if __name__ == '__main__':
                 for arg in sys.argv[2:]:
                     name=name + ' ' + arg
                 name=name[1:]
-            authSearched=searchForUser(name, readFileContents())
-            if(authSearched != 'noAuthCodeFound'):
-                print(name + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + authSearched)
+            userFromList=searchForUser(name, readFileContents())
+            if(userFromList[1] != 'noAuthCodeFound'):
+                print(userFromList[0] + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + userFromList[1])
             else:
-                print('No Match found. Please  try another name.')
+                print('No Match found. Please try another name.')
