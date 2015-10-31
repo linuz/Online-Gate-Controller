@@ -1,11 +1,43 @@
 #!/usr/bin/python
 
-import string, random, sys, os.path
+import string
+import random
+import sys
+import os.path
+
+import smtplib
+import email
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEText import MIMEText
+
+USERNAME = ""
+PASSWORD = ""
+FROM_ADDR = ""
 
 authFile='visitors.txt'
 protocol='http://'
 hostname=''
 authParameterName='visitor'
+
+def sendEmail(e, l):
+    SUBJECT = "Visitor"
+    BODY = "Visit the following link to open the gate: "
+    link = l
+    msg = MIMEMultipart()
+    msg['From'] = FROM_ADDR
+    msg['to'] = e
+    msg['Subject'] = SUBJECT
+    msg.attach(MIMEText(BODY + l))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login(USERNAME, PASSWORD)
+    server.sendmail(FROM_ADDR, e, msg.as_string())
+    server.quit()
+
 
 def constructAuth():
     potentialData='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
@@ -71,6 +103,13 @@ if __name__ == '__main__':
             else:
                 auth=addUser(name)
                 print(name + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + auth)
+                # Code to email person here
+                while 1:
+                    answer = raw_input("Do you want to send an email? (y/n) ").lower()
+                    if answer == "y":
+                        email = raw_input("Enter the email address/text address: ")
+                        sendEmail(email, protocol + hostname + '/?' + authParameterName + '=' + auth)
+                        break 
 
         elif(sys.argv[1] == 'del'):
             if(len(sys.argv) == 2):
