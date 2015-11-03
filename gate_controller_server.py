@@ -63,13 +63,13 @@ def authenticate_value(v):
         record = record.replace("\n", "")
         name,key = record.split(":")
         if v == key:
-            print "[*] Access Granted for " + name
+            print "[*] " + str(datetime.datetime.now()) + " - Access Granted for " + name
             with open(visitor_log_file, "a") as visitor_log:
                 visitor_log.write(str(datetime.datetime.now()) + " - Access Granted for " + name + "\n")
             push_button()
             visitors.close()
             return
-    print "[!] No matching keys found"
+    print "[!] " + str(datetime.datetime.now()) + " - No matching keys found"
     visitors.close()
     return
 
