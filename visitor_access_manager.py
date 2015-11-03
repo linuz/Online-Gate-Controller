@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+#Note, this is unfinished. There are known issues with this
+
 # Reading of config file
 import ConfigParser
 
