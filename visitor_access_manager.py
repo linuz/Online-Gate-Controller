@@ -83,9 +83,9 @@ def removeFromFile(authCode):
 
 if __name__ == '__main__':
     if(len(sys.argv) == 1):
-        print('Add User:    python manageUsers.py add <name>')
-        print('Delete User: python manageUsers.py del <name>')
-        print('Show User:   python manageUsers.py show <name>')
+        print('Add User:    python visitor_access_manager.py add <name>')
+        print('Delete User: python visitor_access_manager.py del <name>')
+        print('Show User:   python visitor_access_manager.py show <name>')
 
     else:
         if(sys.argv[1] == 'add'):
@@ -99,7 +99,7 @@ if __name__ == '__main__':
                 name=name[1:]
             userFromList=searchForUser(name, readFileContents())
             if(userFromList[1] != 'noAuthCodeFound'):
-                print('User already exists, try this argument: manageUsers.py show ' + name)
+                print('User already exists, try this argument: visitor_access_manager.py show ' + name)
             else:
                 auth=addUser(name)
                 print(name + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + auth)
