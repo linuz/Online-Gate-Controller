@@ -25,7 +25,7 @@ hostname = settings.get("Web Server", "Hostname")
 port = settings.getint("Web Server", "Port")
 parameter = settings.get("Web Server", "Parameter")
 response_html = settings.get("Web Server", "Response_HTML")
-visitor_file = settings.get("File", "Visitor_File_Name")
+visitor_file = settings.get("File", "Visitor_File")
 
 # Log files
 web_server_access_log_file = settings.get("Logs", "Web_Server_Access_Log")

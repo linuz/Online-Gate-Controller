@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# Reading of config file
+import ConfigParser
+
 import string
 import random
 import sys
@@ -11,46 +14,48 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEBase import MIMEBase
 from email.MIMEText import MIMEText
 
-USERNAME = ""
-PASSWORD = ""
-FROM_ADDR = ""
+# Grab settings from config file
+settings = ConfigParser.RawConfigParser()
+settings.read("settings.cfg")
+smtp_server= settings.get("Email", "SMTP_Server")
+smtp_port = settings.getint("Email", "SMTP_Port")
+smtp_username = settings.get("Email", "SMTP_Username")
+smtp_password = settings.get("Email", "SMTP_Password")
+email_from_address = settings.get("Email", "Email_From_Address")
+email_subject = settings.get("Email", "Email_Subject")
+email_body = settings.get("Email", "Email_Body")
+visitor_file = settings.get("File", "Visitor_File")
+protocol = settings.get("Web Server", "Protocol")
+hostname = settings.get("Web Server", "Hostname")
+parameter = settings.get("Web Server", "Protocol")
+keyspace = settings.get("Parameter", "Keyspace")
+num_of_characters = settings.getint("Parameter", "Number_of_Characters")
 
-authFile='visitors.txt'
-protocol='http://'
-hostname=''
-authParameterName='visitor'
-
-def sendEmail(e, l):
-    SUBJECT = "Visitor"
-    BODY = "Visit the following link to open the gate: "
-    link = l
+def sendEmail(email, link):
     msg = MIMEMultipart()
-    msg['From'] = FROM_ADDR
-    msg['to'] = e
-    msg['Subject'] = SUBJECT
-    msg.attach(MIMEText(BODY + l))
-
-    server = smtplib.SMTP('smtp.gmail.com', 587)
+    msg['From'] = email_from_address
+    msg['to'] = email
+    msg['Subject'] = email_subject
+    msg.attach(MIMEText(email_body + link))
+    server = smtplib.SMTP(smtp_server, smtp_port)
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login(USERNAME, PASSWORD)
-    server.sendmail(FROM_ADDR, e, msg.as_string())
+    server.login(smtp_username, smtp_password)
+    server.sendmail(email_from_address, email, msg.as_string())
     server.quit()
 
-
 def constructAuth():
-    potentialData='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
-    auth=''.join(random.choice(potentialData) for _ in xrange(16))
+    auth=''.join(random.choice(keyspace) for _ in xrange(num_of_characters))
     return auth
 
 def checkAuthFile():
-    if not os.path.exists(authFile):
-        file(authFile, 'w').close()
+    if not os.path.exists(visitor_file):
+        file(visitor_file, 'w').close()
 
 def addUser(name):
     checkAuthFile()
-    with open(authFile, 'a') as f:
+    with open(visitor_file, 'a') as f:
         auth=constructAuth()
         f.write(name + ':' + auth + '\n')
         print(name + ' Added to the file with auth key ' + auth)
@@ -58,7 +63,7 @@ def addUser(name):
 
 def readFileContents():
     checkAuthFile()
-    with open(authFile, 'r') as f:
+    with open(visitor_file, 'r') as f:
         fileContents=f.readlines()
         return fileContents
 
@@ -73,7 +78,7 @@ def searchForUser(name, userList):
 
 def removeFromFile(authCode):
     checkAuthFile()
-    with open(authFile, 'r+') as f:
+    with open(visitor_file, 'r+') as f:
         contents = f.readlines()
         f.seek(0)
         for item in contents:
@@ -102,13 +107,13 @@ if __name__ == '__main__':
                 print('User already exists, try this argument: visitor_access_manager.py show ' + name)
             else:
                 auth=addUser(name)
-                print(name + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + auth)
+                print(name + '\'s link is: ' + protocol + hostname + '/?' + parameter + '=' + auth)
                 # Code to email person here
                 while 1:
                     answer = raw_input("Do you want to send an email? (y/n) ").lower()
                     if answer == "y":
                         email = raw_input("Enter the email address/text address: ")
-                        sendEmail(email, protocol + hostname + '/?' + authParameterName + '=' + auth)
+                        sendEmail(email, protocol + hostname + '/?' + parameter + '=' + auth)
                         break 
 
         elif(sys.argv[1] == 'del'):
@@ -139,6 +144,6 @@ if __name__ == '__main__':
                 name=name[1:]
             userFromList=searchForUser(name, readFileContents())
             if(userFromList[1] != 'noAuthCodeFound'):
-                print(userFromList[0] + '\'s link is: ' + protocol + hostname + '/?' + authParameterName + '=' + userFromList[1])
+                print(userFromList[0] + '\'s link is: ' + protocol + hostname + '/?' + parameter + '=' + userFromList[1])
             else:
                 print('No Match found. Please try another name.')
