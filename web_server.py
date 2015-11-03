@@ -35,21 +35,9 @@ GPIO.setup(gpio_pin, GPIO.OUT)
 
 # Function to grab the parameter value from the URL 
 def get_parameter_value(url):
-    if "?" in url:
-        query = url.split("?")[1]
-        if "=" in query:
-            param,value = query.split("=")
-            if param == parameter:
-                authenticate_value(value)
-                return
-            else:
-                print "[!] Invalid parameter"
-                return
-        else:
-            print "[!] Invalid query string"
-            return
+    if "?" + parameter + "=" in url:
+        authenticate_value(url.split("?" + parameter + "=")[1])
     else:
-        print "[!] No query string found"
         return
 
 # Function to authenticate the value with a list of valid visitors
