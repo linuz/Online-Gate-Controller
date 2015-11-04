@@ -3,14 +3,14 @@
 # Todo:
 #   - Implement Google Voice API instead of SMTP
 #   - Add port number in link logic
+#   - Add detecting of visitor file
 
 # Reading of config file
 import ConfigParser
 
-import string
 import random
 import sys
-import os.path
+import os
 import datetime
 
 # Libraries needed for sending email
