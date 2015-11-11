@@ -11,12 +11,12 @@ import ConfigParser
 # Used for the HTTP Server
 import BaseHTTPServer
 import SocketServer
-import datetime
 import os
 
 # Libraries for interfacing with Raspberry Pi GPIO Ports
 import RPi.GPIO as GPIO
 import time
+from time import strftime, gmtime
 
 # Grab settings from config file
 settings = ConfigParser.RawConfigParser()
@@ -62,14 +62,14 @@ def authenticate_value(v):
     visitors.read(visitor_file)
     for name in visitors.sections():
         if visitors.get(name, "Key") == v:
-            print "[*] " + str(datetime.datetime.now()) + " - Access Granted for " + name
+            print "[*] " + str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - Access Granted for " + name
             with open(visitor_log_file, "a") as visitor_log:
-                visitor_log.write(str(datetime.datetime.now()) + " - Access Granted for " + name + "\n")
+                visitor_log.write(str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - Access Granted for " + name + "\n")
             push_button()
             return
-    print "[!] " + str(datetime.datetime.now()) + " - No matching keys found"
+    print "[!] " + str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - No matching keys found"
     with open(visitor_log_file, "a") as visitor_log:
-        visitor_log.write(str(datetime.datetime.now()) + " - No matching keys found" + "\n")
+        visitor_log.write(str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - No matching keys found" + "\n")
     return
 
 # Interface with the Raspberry Pi to perform the actions
