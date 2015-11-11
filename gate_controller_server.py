@@ -4,8 +4,9 @@
 # Made by Dennis <dennismald@gmail.com>
 # Todo:
 #   Implement rate limiting
-#   Reimplement webserver logging
+#   Remove Server headers
 #   Secure webserver
+#   GPIO requires root. Fix this to not require root
 
 # Reading of config file
 import ConfigParser
