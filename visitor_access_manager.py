@@ -33,7 +33,7 @@ email_subject = settings.get("Email", "Email_Subject")
 email_body = settings.get("Email", "Email_Body")
 visitor_file = settings.get("File", "Visitor_File")
 protocol = settings.get("Web Server", "Protocol")
-hostname = settings.get("Web Server", "Hostname")
+host = settings.get("Web Server", "Hostname")
 parameter = settings.get("Web Server", "Parameter")
 keyspace = settings.get("Parameter", "Keyspace")
 num_of_characters = settings.getint("Parameter", "Number_of_Characters")
@@ -52,7 +52,7 @@ def addVisitor(name):
         print ""
         return
     key = generateKey()
-    link = protocol+hostname+"/?"+parameter+"="+key
+    link = protocol+host+"/?"+parameter+"="+key
     visitors.add_section(name)
     visitors.set(name, "Key", key)
     visitors.set(name, "Date Created", strftime("%Y-%m-%d", gmtime())) 
@@ -76,7 +76,7 @@ def showLink(name):
         print ""
         return
     key = visitors.get(name, "Key")
-    link = protocol+hostname+"/?"+parameter+"="+key
+    link = protocol+host+"/?"+parameter+"="+key
     print ""
     print "Link for " + name 
     print "---------------------------"
