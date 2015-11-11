@@ -20,6 +20,7 @@ import time
 
 # Grab settings from config file
 settings = ConfigParser.RawConfigParser()
+visitors = ConfigParser.RawConfigParser()
 settings.read("settings.cfg")
 hostname = settings.get("Web Server", "Hostname")
 port = settings.getint("Web Server", "Port")
@@ -58,19 +59,17 @@ def get_parameter_value(url):
 
 # Function to authenticate the value with a list of valid visitors
 def authenticate_value(v):
-    visitors = open(visitor_file)
-    for record in visitors:
-        record = record.replace("\n", "")
-        name,key = record.split(":")
-        if v == key:
+    visitors.read(visitor_file)
+    for name in visitors.sections():
+        if visitors.get(name, "Key") == v:
             print "[*] " + str(datetime.datetime.now()) + " - Access Granted for " + name
             with open(visitor_log_file, "a") as visitor_log:
                 visitor_log.write(str(datetime.datetime.now()) + " - Access Granted for " + name + "\n")
             push_button()
-            visitors.close()
             return
     print "[!] " + str(datetime.datetime.now()) + " - No matching keys found"
-    visitors.close()
+    with open(visitor_log_file, "a") as visitor_log:
+        visitor_log.write(str(datetime.datetime.now()) + " - No matching keys found" + "\n")
     return
 
 # Interface with the Raspberry Pi to perform the actions
