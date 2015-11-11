@@ -109,7 +109,7 @@ def sendEmail(email, link):
     msg['From'] = email_from_address
     msg['to'] = email
     msg['Subject'] = email_subject
-    msg.attach(MIMEText(email_body + link))
+    msg.attach(MIMEText(email_body + " " + link))
     server = smtplib.SMTP(smtp_server, smtp_port)
     server.ehlo()
     server.starttls()
