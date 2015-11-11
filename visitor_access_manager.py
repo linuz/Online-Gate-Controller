@@ -11,7 +11,7 @@ import ConfigParser
 import random
 import sys
 import os
-import datetime
+from time import strftime, gmtime
 
 # Libraries needed for sending email
 import smtplib
@@ -55,7 +55,7 @@ def addVisitor(name):
     link = protocol+hostname+"/?"+parameter+"="+key
     visitors.add_section(name)
     visitors.set(name, "Key", key)
-    visitors.set(name, "Date Created", datetime.datetime.now()) 
+    visitors.set(name, "Date Created", strftime("%Y-%m-%d", gmtime())) 
     if raw_input("Send an email/text? (y/N) ") == "y":
         email = raw_input("Email Address: ")
         visitors.set(name, "Email", email)

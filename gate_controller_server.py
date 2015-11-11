@@ -62,14 +62,14 @@ def authenticate_value(v):
     visitors.read(visitor_file)
     for name in visitors.sections():
         if visitors.get(name, "Key") == v:
-            print "[*] " + str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - Access Granted for " + name
+            print "[*] " + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " - Access Granted for " + name
             with open(visitor_log_file, "a") as visitor_log:
-                visitor_log.write(str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - Access Granted for " + name + "\n")
+                visitor_log.write(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " - Access Granted for " + name + "\n")
             push_button()
             return
-    print "[!] " + str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - No matching keys found"
+    print "[!] " + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " - No matching keys found"
     with open(visitor_log_file, "a") as visitor_log:
-        visitor_log.write(str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) + " - No matching keys found" + "\n")
+        visitor_log.write(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " - No matching keys found" + "\n")
     return
 
 # Interface with the Raspberry Pi to perform the actions
