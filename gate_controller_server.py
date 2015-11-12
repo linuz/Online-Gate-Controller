@@ -83,7 +83,7 @@ def authenticate_value(v):
 # Interface with the Raspberry Pi to perform the actions
 def push_button():
     GPIO.output(gpio_pin, True)
-    time.sleep(2)
+    time.sleep(4)
     GPIO.output(gpio_pin, False)
     return
 
